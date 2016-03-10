@@ -25,7 +25,7 @@ dim_num = numel(prob);
         for dim_i=1:dim_num
             figure(cur_fig + dim_i);
             clf(cur_fig + dim_i);
-            plot( prob{dim_i}(samp_i, :) );
+            plot( gt.prob{samp_i, dim_i} );
             title(sprintf('Probabilities for sample = %d. Mean = %f', ...
                 samp_i, ...
                 data(samp_i, dim_i)) );
