@@ -14,7 +14,12 @@ feat_size = [1, size(gt.feat, 2)];
 fprintf( '%s: samples = %d \n', mfilename, samples_num);
 
 %% Executions
-data_4d = zeros([feat_size(2), feat_size(1), 1, samples_num], precision);
+feat_4d = zeros([feat_size(2), feat_size(1), 1, samples_num], precision);
+%Save all: feat, data, labels, prob
+gt_cur.feat    = gt.feat(indx, :);
+gt_cur.xyz     = gt.data(indx, :);
+gt_cur.labels  = gt.labels(indx, :);
+gt_cur.prob    = gt.prob(indx, :);
 
 for dim_i=1:gt.dim_num
     label_prob.(gt.names{dim_i}) = zeros([1, 1, numel(gt.lbl_val{dim_i}), samples_num], precision);
@@ -22,7 +27,7 @@ end
 
 for samp_i=1:numel(indx)
     for feat_i=1:feat_size(2)
-        data_4d( feat_i, 1, 1, samp_i) = gt.data(indx(samp_i), feat_i);
+        feat_4d( feat_i, 1, 1, samp_i) = gt.feat(indx(samp_i), feat_i);
     end
     
     for dim_i=1:gt.dim_num
@@ -32,9 +37,12 @@ end
 
 for dim_i=1:gt.dim_num
     labels = int32(gt.labels(indx, dim_i)');
-    hdf5write( [h5_filename, '_', gt.names{dim_i} ,'.h5'], '/data', data_4d, '/label', labels);
-    hdf5write( [h5_filename, '_', gt.names{dim_i} ,'_prob.h5'], '/data', data_4d, '/label', label_prob.(gt.names{dim_i}) );
+    hdf5write( [h5_filename, '_', gt.names{dim_i} ,'.h5'], '/data', feat_4d, '/label', labels);
+    hdf5write( [h5_filename, '_', gt.names{dim_i} ,'_prob.h5'], '/data', feat_4d, '/label', label_prob.(gt.names{dim_i}) );
 end
+
+%Saving all ground truth data in a mat file 
+save(h5_filename, 'gt_cur');
 
 %Creating a soft link to one of the files s.t. everything would work by
 %default

@@ -24,7 +24,7 @@ filenames.label_values = [filenames.output_dir '/label_values'];
 
 %Plotting options
 plot_traj = 0;
-plot_prob = 1;
+plot_prob = 0;
 
 %% Execution
 tic
@@ -51,7 +51,7 @@ gt.train_prop = gt.train_prop ./ sum(gt.train_prop);
 gt.feat_name_indx = featnames2indx(val_names, gt.feat_names);
 gt.name_indx   = featnames2indx(val_names, gt.names);
 
-%Get relevant
+%Get relevant data
 gt.feat = data(:, gt.feat_name_indx);
 gt.data   = data(:, gt.name_indx);
 
@@ -75,10 +75,9 @@ for dim_i=1:gt.dim_num
 end
 
 %Get probabilities from labels
-for dim_i=1:gt.dim_num
-    gt.prob{samp_i, dim_i} = zeros( 1, numel(gt.lbl_val{dim_i}) );
-    
+for dim_i=1:gt.dim_num    
     for samp_i=1:samp_num
+%         gt.prob{samp_i, dim_i} = zeros( 1, numel(gt.lbl_val{dim_i}) );
         gt.prob{samp_i, dim_i} = ...
             gaussmf(gt.lbl_val{dim_i}, [gt.prob_variance(dim_i) gt.data(samp_i, dim_i) ]);
         %Renormalize
@@ -87,21 +86,22 @@ for dim_i=1:gt.dim_num
 end
 
 %Extracting indices for train/val/test
-crossval_indx = uwbs_save_trainvaltest(gt, filenames);
+crossval_indx = uwbs_save_trainvaltest(gt, filenames, precision);
 
 
 %% Plotting
 cur_fig = fig_offset;
 
-cur_fig = cur_fig + 1;
-figure(cur_fig);
 if plot_traj
+    cur_fig = cur_fig + 1;
+    figure(cur_fig);
     plot( gt.data(:,1), gt.data(:,2) );
 end
 
 if plot_prob    
-    cur_fig = uwbs_plot_prob(gt.prob, gt.data, cur_fig);
+    cur_fig = uwbs_plot_prob(gt.prob, gt.data, 100, cur_fig);
 end
 
+%Printing processing time
 time_total = toc;
-fprintf('%s : Total processing time = %d (min) %d (sec) \n', mfilename, floor(time_total / 60), rem(time_total, 60) );
+print_proctime(mfilename, time_total);

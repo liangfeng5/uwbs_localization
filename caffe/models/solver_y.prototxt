@@ -1,0 +1,19 @@
+net: "models/net_poke_fc_n900_out40.prototxt"
+#net: "models/net_poke_fc_n900_out20.prototxt"
+#net: "models/net_poke_fc_n900_out10.prototxt"
+test_iter: 50
+test_interval: 100
+
+lr_policy: "step"
+base_lr: 0.001
+gamma: 0.5
+stepsize: 1000
+
+display: 100
+#max_iter: 2000
+max_iter: 5000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 100
+snapshot_prefix: "snapshots/caffenet_train"
+solver_mode: GPU
