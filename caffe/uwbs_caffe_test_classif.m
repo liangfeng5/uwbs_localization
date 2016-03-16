@@ -59,13 +59,15 @@ load(files.gt_meta); %It will provide label values and other
 % - rearrange axes: 1st dim = sample index, 2nd dim = x,y,z ... i.e. values
 %   of outputs
 
-size(h5_label_val)
 results.gt = squeeze(h5_label_val);
+
 if min( results.gt ) ~= 1
-   results.gt = results.gt(:); 
+   results.gt = permute(results.gt,[2 1]);
+   fprintf('h5_label_val size =');
+%     display(size(results.gt));
    [results.gt_prob results.gt_label] = max( results.gt, [], 2 );
     %VERY IMPORTANT, because caffe converts label indx starting with 0
-    results.gt_label_shift = int32(results.label_pred); 
+    results.gt_label_shift = int32(results.gt_label); 
     results.label_pred = results.gt_label_shift - 1; 
 else
     results.gt_label = results.gt;    
@@ -76,7 +78,7 @@ results.samples_num    = size(results.gt, 1);
 results.samples_num_h5 = size(h5_data_val, 4);
 if results.samples_num ~= results.samples_num_h5
    msgID = sprintf('%s:SampNumDontMatch', mfilename);
-   msg = sprintf('ERROR: %s : number of samples in h5 file (%s) does not correspond to number of samples in mat file (%s) \n', mfilename, files.h5_val, files.all_val_data ); 
+   msg = sprintf('ERROR: %s : number of samples(%d) in h5 file (%s) does not correspond to number of samples (%d) in mat file (%s) \n', mfilename, results.samples_num_h5, files.h5_val, results.samples_num, files.all_val_data ); 
    display(msg);
    baseException = MException(msgID,msg); 
    throw(baseException);
@@ -132,7 +134,8 @@ results.label_pred = results.label_pred - 1;
 %Shift back because matlab indexing is from 1 (not 0 as in C++)
 %Need this variable to access values of labels in arrays
 
-results.pred_miscl =  abs( int32(results.gt) - results.label_pred );
+results.pred_miscl =  abs( int32(results.gt_label) - results.label_pred );
+display(results.pred_miscl)
 results.accuracy  = 1 - length( find( results.pred_miscl ) ) / length( results.pred_miscl );
 
 % Getting values for labels associated with samples

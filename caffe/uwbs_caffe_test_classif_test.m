@@ -1,20 +1,19 @@
-deploy_model = 'models/net_poke_fc_n900_out80_deploy.prototxt';
+deploy_model = 'models/net_uwbs_fc_n900_out80_deploy.prototxt';
 
-%Model output correspondence to grids:(2cm;10deg / 1cm; 5deg / 0.5cm; 2.5deg)
-% x      20 / 40 / 80
-% y      10 / 20 / 40
-% z      15 / 30 / 60 
+%Model output correspondence to grids: 5cm 
+% x      80
+% y      40
 
 %% Snapshots
-snapshot = '/media/Store_2/poking_data/results/kirk_pb_wood__pac_test_xyzyp__1cm5deg__2016_03_01/plastic_box/cross_01/best_yaw__iter_004700__acc_0.624.caffemodel'; 
+snapshot = 'snapshots/caffenet_train_iter_10000.caffemodel'; 
 
 
 %% Lbl values
-test_files.lbl_values = '/media/Store_2/poking_data/data/plastic_box_lefthand_vert00__2016_02_07/train_val_xyzyp_1cm5deg_pac/label_values.mat';
+test_files.gt_meta = 'data_root/uwbs_ground_00/train_val/meta_data.mat';
 
 %% Validataion files
-test_files.all_val_data = 'data_root/plastic_box_lefthand_vert00__2016_02_07/train_val_xyzyp_1cm5deg_test_pac/cross_01/data_test.mat';
-test_files.h5_val       = 'data_root/plastic_box_lefthand_vert00__2016_02_07/train_val_xyzyp_1cm5deg_test_pac/cross_01/data_test_x.h5';
+test_files.all_val_data = 'data/data_test.mat';
+test_files.h5_val       = 'data/data_test.h5';
 
 
 %% Execution

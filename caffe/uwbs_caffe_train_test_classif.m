@@ -56,7 +56,7 @@ delete('data');
 sys_res = system(['ln -s ' dirs.data ' data']);
 test_files.h5_val       = 'data/data_test.h5';
 test_files.all_val_data = 'data/data_test.mat';
-test_files.lbl_values   = data_files.lbl_values;
+test_files.gt_meta   = data_files.gt_meta;
 
 %% Execution
 solver_filename{length(classifiers)} = '';

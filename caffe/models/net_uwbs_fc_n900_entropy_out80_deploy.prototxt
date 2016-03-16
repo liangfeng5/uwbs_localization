@@ -3,8 +3,8 @@ input: "data"
 input_shape {
   dim: 1
   dim: 1
-  dim: 57
-  dim: 30
+  dim: 1
+  dim: 6
 }
 layer {
   name: "fc6"
@@ -100,7 +100,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 40
+    num_output: 80
     weight_filler {
       type: "xavier"
       #std: 0.01
@@ -153,7 +153,7 @@ layer {
 #}
 layer {
   name: "prob"
-  type: "Softmax"
+  type: "SigmoidCrossEntropyLoss"
   bottom: "fc8"
   top: "prob"
 }

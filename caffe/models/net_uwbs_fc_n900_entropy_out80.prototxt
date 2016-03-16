@@ -1,10 +1,37 @@
 name: "Regrasp"
-input: "data"
-input_shape {
-  dim: 1
-  dim: 1
-  dim: 57
-  dim: 30
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+ # transform_param {
+ #   mirror: false
+ #   mean_file: "data/mean.binaryproto"
+ #}
+  hdf5_data_param {
+    source: "data_train.txt"
+    batch_size: 256
+  }
+}
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+ # transform_param {
+ #   mirror: false
+ #   mean_file: "data/mean.binaryproto"
+ # }
+  hdf5_data_param {
+    source: "data_val.txt"
+    batch_size: 32
+  }
 }
 layer {
   name: "fc6"
@@ -151,10 +178,21 @@ layer {
 #    }
 #  }
 #}
+#layer {
+#  name: "accuracy"
+#  type: "Accuracy"
+#  bottom: "fc8"
+#  bottom: "label"
+#  top: "accuracy"
+#  include {
+#    phase: TEST
+#  }
+#}
 layer {
-  name: "prob"
-  type: "Softmax"
+  name: "loss"
+  type: "SigmoidCrossEntropyLoss"
   bottom: "fc8"
-  top: "prob"
+  bottom: "label"
+  top: "loss"
 }
 
