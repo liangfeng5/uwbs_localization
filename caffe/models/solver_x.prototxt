@@ -1,6 +1,4 @@
-net: "models/net_uwbs_fc_n900_entropy_out80.prototxt"
-#net: "models/net_uwbs_fc_n900_out40.prototxt"
-#net: "models/net_uwbs_fc_n900_out20.prototxt"
+net: "models/net_uwbs_fc_3lyr_100neu_entr_out100.prototxt"
 test_iter: 50
 test_interval: 100
 

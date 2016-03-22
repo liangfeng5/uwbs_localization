@@ -87,11 +87,11 @@ end
 results.ff_time = zeros([results.samples_num, 1]);
 
 
-if strcmp('x', mode)
+if strcmp('x', mode) || strcmp('x_prob', mode)
     classes_num = length(gt_meta.lbl_val{1} ); %Only for classification
-elseif strcmp('y', mode)
+elseif strcmp('y', mode) || strcmp('y_prob', mode)
     classes_num = length(gt_meta.lbl_val{2} ); %Only for classification
-elseif strcmp('z', mode)
+elseif strcmp('z', mode) || strcmp('z_prob', mode)
     classes_num = length(gt_meta.lbl_val{3} ); %Only for classification
 end
 
@@ -135,26 +135,26 @@ results.label_pred = results.label_pred - 1;
 %Need this variable to access values of labels in arrays
 
 results.pred_miscl =  abs( int32(results.gt_label) - results.label_pred );
-display(results.pred_miscl)
+% display(results.pred_miscl)
 results.accuracy  = 1 - length( find( results.pred_miscl ) ) / length( results.pred_miscl );
 
 % Getting values for labels associated with samples
 distance_metric = 0;
-if strcmp('x', mode)
+if strcmp('x', mode) || strcmp('x_prob', mode)
     results.gt_value = zeros(results.samples_num, 1);
     results.label_pred_value = gt_meta.lbl_val{1}( results.label_pred_shift );
     results.label_pred_value = results.label_pred_value(:);
     for samp_i=1:results.samples_num 
         results.gt_value(samp_i) = gt_cur.xyz(samp_i, 1);
     end
-elseif strcmp('y', mode)
+elseif strcmp('y', mode) || strcmp('y_prob', mode)
     results.gt_value = zeros(results.samples_num, 1);
     results.label_pred_value = gt_meta.lbl_val{2}( results.label_pred_shift );
     results.label_pred_value = results.label_pred_value(:);
     for samp_i=1:results.samples_num 
         results.gt_value(samp_i) = gt_cur.xyz(samp_i, 2);
     end
-elseif strcmp('z', mode)
+elseif strcmp('z', mode) || strcmp('z_prob', mode)
     results.gt_value = zeros(results.samples_num, 1);
     results.label_pred_value = gt_meta.lbl_val{3}( results.label_pred_shift );
     results.label_pred_value = results.label_pred_value(:);

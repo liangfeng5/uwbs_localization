@@ -1,18 +1,23 @@
 %% Parameters
 ext = 'csv';
 gt.train_prop = [0.8, 0.08, 0.12]; %Training/Validation/Testing
-gt.step = 0.05 * [1 1 1]; %XYZ
+gt.step = 0.04 * [1 1 1]; %XYZ
 gt.feat_names = {'dist0','dist1','dist2','dist3','dist4','dist5'};
 gt.names  = {'x','y'};
 gt.limits = [-2 2; -1 1];
 precision = 'single';
-gt.prob_variance = 2 * gt.step;
+% gt.prob_variance = 0.5 * gt.step;
+% gt.prob_variance = gt.step;
+% gt.prob_variance =  4 * gt.step;
+gt.prob_variance = 16 * gt.step;
+% gt.prob_variance = 64 * gt.step;
 fig_offset = 0;
 
 %output filenames MUST NOT contain extension. Only the path and the name
 %itself
 input_filenames = 'data_dir/';
 input_directory = fileparts(input_filenames);
+% filenames.output_dir = [input_directory '/train_val_grid040mm_sigma640mm'];
 filenames.output_dir = [input_directory '/train_val'];
 filenames.crossval_prefix = 'cross';
 filenames.h5_train = 'data_train';
@@ -81,6 +86,7 @@ for dim_i=1:gt.dim_num
         gt.prob{samp_i, dim_i} = ...
             gaussmf(gt.lbl_val{dim_i}, [gt.prob_variance(dim_i) gt.data(samp_i, dim_i) ]);
         %Renormalize
+        gt.prob{samp_i, dim_i} = gt.prob{samp_i, dim_i} - min(gt.prob{samp_i, dim_i});
         gt.prob{samp_i, dim_i} = gt.prob{samp_i, dim_i} / sum( gt.prob{samp_i, dim_i} );
     end
 end

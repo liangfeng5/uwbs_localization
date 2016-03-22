@@ -2,81 +2,84 @@
 % Run crossvalidations for all objects
 %
 % --- NOTES:
-% Results for an object: object{}.results.x/y/z/xyz
-% Results for crossval:  object{}.cross{}.results.x/y/z/xyz
-%
-% --- REMINDER:
-% - don't forget to adjust test_interval = snapshot interval
-% - add all objects
-% - save results in the root of training
-% - make sure that soft links for data folder are properly changing for
-% every objec
-% - make sure to set test_batch = 32, test_iter = 30
-% - make sure the results are saved in mat and txt files
-% - make sure you changed filtering object while running poke_proc
-% - when you run for generalization don't forget to include locations of
-% fingers
-
-% --- TRAIN / VAL samples num
-% mazolla:     1509 / 377
-% plastic_box: 1331 / 333
-% kirkland:     761 / 190
-% pringles:     835 / 209
-% wood_sheet:  1378 / 344
+% Results for an object: object{}.results.x/y/z
+% Results for crossval:  object{}.cross{}.results.x/y/z
 
 %% Parameters:
 data_root = 'data_root';
-data_train_val = 'train_val';
-
-solvers.x     = 'models/solver_x.prototxt';
-solvers.y     = 'models/solver_y.prototxt';
-solvers.z     = 'models/solver_z.prototxt';
+dataset_root = 'dataset_root';
+% data_train_val = 'train_val';
 
 crossval_prefix = 'cross_';
 results_root    = 'results';
 
 % --- Objects
+%Model output correspondence to grids: 50mm, 40mm, 20mm, 10mm, 5mm
+% x      80 100 200 400 800
+% y      40  50 100 200 400
+
 grid_cur = 0;
 
-grid_cur = grid_cur + 1;
-grid_res{grid_cur}.name = 'kirkland';
-grid_res{grid_cur}.dir  = 'kirkland_vert00__2016_01_28';
+% grid_cur = grid_cur + 1;
+% grid_res{grid_cur}.name = 'sigma_005mm';
+% grid_res{grid_cur}.dir  = 'train_val_grid010mm_sigma005mm';
+% grid_res{grid_cur}.solvers.x_prob = 'models/solver_x.prototxt';
+% grid_res{grid_cur}.solvers.y_prob = 'models/solver_y.prototxt';
+% grid_res{grid_cur}.solvers.z_prob = 'models/solver_z.prototxt';
 
 grid_cur = grid_cur + 1;
-grid_res{grid_cur}.name = 'plastic_box';
-grid_res{grid_cur}.dir  = 'plastic_box_lefthand_vert00__2016_02_07';
+grid_res{grid_cur}.name = 'sigma_020mm';
+grid_res{grid_cur}.dir  = 'train_val_grid040mm_sigma020mm';
+grid_res{grid_cur}.solvers.x_prob = 'models/solver_x.prototxt';
+grid_res{grid_cur}.solvers.y_prob = 'models/solver_y.prototxt';
+grid_res{grid_cur}.solvers.z_prob = 'models/solver_z.prototxt';
 
 grid_cur = grid_cur + 1;
-grid_res{grid_cur}.name = 'wood_sheet';
-grid_res{grid_cur}.dir  = 'wood_sheet_lefthand_vert00__2016_02_08';
+grid_res{grid_cur}.name = 'sigma_040mm';
+grid_res{grid_cur}.dir  = 'train_val_grid040mm_sigma040mm';
+grid_res{grid_cur}.solvers.x_prob = 'models/solver_x.prototxt';
+grid_res{grid_cur}.solvers.y_prob = 'models/solver_y.prototxt';
+grid_res{grid_cur}.solvers.z_prob = 'models/solver_z.prototxt';
 
+grid_cur = grid_cur + 1;
+grid_res{grid_cur}.name = 'sigma_160mm';
+grid_res{grid_cur}.dir  = 'train_val_grid040mm_sigma160mm';
+grid_res{grid_cur}.solvers.x_prob = 'models/solver_x.prototxt';
+grid_res{grid_cur}.solvers.y_prob = 'models/solver_y.prototxt';
+grid_res{grid_cur}.solvers.z_prob = 'models/solver_z.prototxt';
+
+grid_cur = grid_cur + 1;
+grid_res{grid_cur}.name = 'sigma_640mm';
+grid_res{grid_cur}.dir  = 'train_val_grid040mm_sigma640mm';
+grid_res{grid_cur}.solvers.x_prob = 'models/solver_x.prototxt';
+grid_res{grid_cur}.solvers.y_prob = 'models/solver_y.prototxt';
+grid_res{grid_cur}.solvers.z_prob = 'models/solver_z.prototxt';
 
 % --- Classifiers
-classifiers = {'x','y'};
+classifiers = {'x_prob','y_prob'};
 
 %% Execution:
 results_run_dir = [ results_root '/' datestr(now,'yyyy_mm_dd_HH_MM_SS') ];
 
 for grid_i=1:numel(grid_res)
-    grid_res{grid_i}.dirlist = dir( [data_root '/' grid_res{grid_i}.dir '/' data_train_val '/' crossval_prefix '*'] );
+    grid_res{grid_i}.dirlist = dir( [dataset_root '/' grid_res{grid_i}.dir '/' crossval_prefix '*'] );
     grid_res{grid_i}.crossval_num =  numel( grid_res{grid_i}.dirlist ); %How many crossvalidataion are run for an object
     
     fprintf('--- Training for object %s. Crossvalidations found = %d ...\n', grid_res{grid_i}.dir, grid_res{grid_i}.crossval_num );
     
     for cross_i=1:grid_res{grid_i}.crossval_num
         fprintf('--- Obj = %s : Crossvalidation training = %d \n', grid_res{grid_i}.name, cross_i);
-        grid_res{grid_i}.data_files.gt_meta = [data_root '/' grid_res{grid_i}.dir '/label_values.mat'];
+        grid_res{grid_i}.data_files.gt_meta = [dataset_root '/' grid_res{grid_i}.dir '/meta_data.mat'];
         grid_res{grid_i}.cross{cross_i}.dirs.data    = [ ...
-            data_root '/' ...
-            grid_res{grid_i}.dir '/' ...
-            data_train_val ...
+            dataset_root '/' ...
+            grid_res{grid_i}.dir ...
             sprintf('/%s%02d', crossval_prefix, cross_i') ];
         grid_res{grid_i}.cross{cross_i}.dirs.results = ...
             [results_run_dir sprintf('/%s/%s%02d', grid_res{grid_i}.name, crossval_prefix, cross_i) ];
         grid_res{grid_i}.cross{cross_i}.dirs.model   = grid_res{grid_i}.cross{cross_i}.dirs.results;
         
-        grid_res{grid_i}.cross{cross_i}.results = poke_caffe_train_test_classif( ...
-            solvers, ...
+        grid_res{grid_i}.cross{cross_i}.results = uwbs_caffe_train_test_classif( ...
+            grid_res{grid_i}.solvers, ...
             grid_res{grid_i}.cross{cross_i}.dirs, ...
             grid_res{grid_i}.data_files, ...
             classifiers );
@@ -222,7 +225,7 @@ for str_i=1:numel(res_str)
 end
 
 %% Saving results
-save( [results_run_dir '/results.mat' ], 'object', 'solvers', 'classifiers' );
+save( [results_run_dir '/results.mat' ], 'grid_res', 'classifiers' );
 % Saving a txt file
 txt_file_id = fopen([results_run_dir '/results.txt' ],'w');
 fprintf(txt_file_id, '%s', res_str_all);

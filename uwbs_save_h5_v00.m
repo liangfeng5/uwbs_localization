@@ -1,4 +1,4 @@
-function [ samples_num ] = uwbs_save_h5( gt, indx, h5_filename, precision )
+function [ samples_num ] = uwbs_save_h5_v00( gt, indx, h5_filename, precision )
 %% Description:
 % given an array of data cuts save them into an h5 file for caffe
 % --- Arguments:

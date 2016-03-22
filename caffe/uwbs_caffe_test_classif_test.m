@@ -1,11 +1,11 @@
-deploy_model = 'models/net_uwbs_fc_n900_out80_deploy.prototxt';
+deploy_model = 'models/net_uwbs_fc_3lyr_100neu_entr_out80_deploy.prototxt';
 
-%Model output correspondence to grids: 5cm 
-% x      80
-% y      40
+%Model output correspondence to grids: 50mm, 40mm, 20mm, 10mm, 5mm
+% x      80 100 200 400 800
+% y      40  50 100 200 400
 
 %% Snapshots
-snapshot = 'snapshots/caffenet_train_iter_10000.caffemodel'; 
+snapshot = 'snapshots/caffenet_train_iter_9000.caffemodel'; 
 
 
 %% Lbl values

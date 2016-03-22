@@ -1,17 +1,15 @@
-net: "models/net_uwbs_fc_n900_out40.prototxt"
-#net: "models/net_uwbs_fc_n900_out20.prototxt"
-#net: "models/net_uwbs_fc_n900_out10.prototxt"
+net: "models/net_uwbs_fc_3lyr_100neu_entr_out50.prototxt"
 test_iter: 50
 test_interval: 100
 
 lr_policy: "step"
-base_lr: 0.001
-gamma: 0.5
-stepsize: 1000
+base_lr: 0.01
+gamma: 0.1
+stepsize: 4000
 
 display: 100
 #max_iter: 2000
-max_iter: 5000
+max_iter: 12000
 momentum: 0.9
 weight_decay: 0.0005
 snapshot: 100

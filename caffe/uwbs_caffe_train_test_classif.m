@@ -110,8 +110,21 @@ end
 % classifiers cumulative results)
 if isfield(results, 'x') && isfield(results, 'y')
     results.xy_sep.error_vec = [results.x.error_vec, results.y.error_vec];
-    results.xy_sep.error = sqrt( sum( abs(results.xyz_sep.error_vec).^2, 2  ) );
+    results.xy_sep.error = sqrt( sum( abs(results.xy_sep.error_vec).^2, 2  ) );
 end
+
+% classifiers cumulative results)
+if isfield(results, 'x_prob') && isfield(results, 'y_prob') && isfield(results, 'z_prob')
+    results.xyz_sep.error_vec = [results.x_prob.error_vec, results.y_prob.error_vec, results.z_prob.error_vec];
+    results.xyz_sep.error = sqrt( sum( abs(results.xyz_sep.error_vec).^2, 2  ) );
+end
+
+% classifiers cumulative results)
+if isfield(results, 'x_prob') && isfield(results, 'y_prob')
+    results.xy_sep.error_vec = [results.x_prob.error_vec, results.y_prob.error_vec];
+    results.xy_sep.error = sqrt( sum( abs(results.xy_sep.error_vec).^2, 2  ) );
+end
+
 
 end
 
