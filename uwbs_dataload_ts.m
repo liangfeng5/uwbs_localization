@@ -14,10 +14,10 @@ params.precision = 'single';
 params.feat_timelen = 20; %number of time steps used as feature vector
 % params.gt_prob_variance = 0.5 * params.gt_grid_step;
 % params.gt_prob_variance = params.gt_grid_step;
-% params.gt_prob_variance =  4 * params.gt_grid_step;
-params.gt_prob_variance = 16 * params.gt_grid_step;
+params.gt_prob_variance =  2 * params.gt_grid_step;
+% params.gt_prob_variance = 16 * params.gt_grid_step;
 params.subsamp_num = 2000;
-% params.gt_prob_variance = 64 * params.gt_grid_step;0.23 
+% params.gt_prob_variance = 64 * params.gt_grid_step; 
 fig_offset = 0;
 
 %output filenames MUST NOT contain extension. Only the path and the name
@@ -35,8 +35,8 @@ filenames.label_values = [filenames.output_dir '/label_values'];
 
 
 %Plotting options
-plot_traj = 1;
-plot_prob = 1;
+plot_traj = 0;
+plot_prob = 0;
 
 %% Execution: preprocessing
 tic
@@ -110,6 +110,7 @@ for dim_i=1:params.label_dim_num
     %Assign labels
     [params.label_count{dim_i}, params.label(:, dim_i)] = ...
         histc( data_temp.(params.label_names{dim_i}), params.gt_grid{dim_i} );
+    params.label(:, dim_i) = params.label(:, dim_i) - 1; %For caffe
     
     fprintf('%s : Labels in for %s = %d \n', mfilename, params.label_names{dim_i}, numel(params.label_val{dim_i}) );
 end

@@ -14,7 +14,7 @@ samp_num = numel(samples);
 fprintf( '%s: samples = %d \n', mfilename, samp_num);
 
 %% Executions
-%H x W x C x N
+%W x H x C x N
 feat_num = numel(params.feat_names);
 feat_4d = zeros([feat_num, params.feat_timelen, 1, samp_num], params.precision);
 
